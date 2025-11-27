@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<template id="report_invoice_document" inherit_id="account.report_invoice_document">
+
+        <xpath expr="." position="replace">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <div class="text-center" style="font-size: 20px;">
+                            <img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="max-width: 200px;"/><br/>
+                            <strong>印豪食品有限公司<br/>Srikandi Food Company Limited</strong>
+                        </div>
+                    </div>
+
+                    <div class="article">
+
+                        <!--Document title div-->
+                        <div class="page">
+                            <div style="float: right">
+                                <h5><strong>INVOICE</strong></h5>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        
+                            <!--Document information div-->
+                            <div style="display: flex; justify-content: center; margin-top: 20px; padding: 0px; width: 100%;">
+                                <table class="table table-sm table-borderless" style="font-size: 17px; width: 63%; display: inline-block;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 400px; text-align: right;"><strong>Customer:</strong></td>
+                                            <td style="width: 600px; text-align: left;"><t t-esc="o.partner_id.name"/></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="width: 400px; text-align: right;"><strong>Address:</strong></td>
+                                            <td style="width: 600px; text-align: left;"><span t-field="o.partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' /></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="width: 400px; text-align: right;"><strong>Attn:</strong></td>
+                                            <td style="width: 600px; text-align: left;">
+                                                <t t-if="o.attn">
+                                                    <span t-esc="o.attn"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="width: 400px; text-align: right;"><strong>Tel:</strong></td>
+                                            <td style="width: 600px; text-align: left;">
+                                                <t t-if="o.partner_id.phone">
+                                                    <span t-esc="o.partner_id.phone"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-sm table-borderless" style="font-size: 17px; width: 27%; display: inline-block; margin-left: 63px;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="white-space: nowrap; text-align: right;"><strong>Invoice No:</strong></td>
+                                            <td style="white-space: nowrap; text-align: left;"><t t-esc="o.name"/></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;"><strong>Invoice Date:</strong></td>
+                                            <td style="white-space: nowrap; text-align: left;">
+                                                <t t-if="o.invoice_date">
+                                                    <span t-esc="o.invoice_date.strftime('%d-%m-%Y')"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;"><strong>DN No.:</strong></td>
+                                            <td style="white-space: nowrap; text-align: left;">
+                                                <t t-if="o.dn_no">
+                                                    <span t-esc="o.dn_no"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;"><strong>Delivery Date:</strong></td>
+                                            <td style="white-space: nowrap; text-align: left;">
+                                                <t t-if="o.delivery_date">
+                                                    <span t-esc="o.delivery_date.strftime('%d-%m-%Y')"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right; white-space: nowrap"><strong>Payment Terms:</strong></td>
+                                            <td style="text-align: left;">
+                                                <t t-if="o.invoice_payment_term_id">
+                                                    <span t-esc="o.invoice_payment_term_id.name"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!--Purchase information table-->
+                            <table class="table table-sm mt-2" style="font-size: 17px; border: 2px solid black;">
+                                <thead width="100%">
+                                    <tr>
+                                        <th class="text-center" style="border:2px solid black;" colspan="2" width="5%">
+                                            <strong>Item#</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="1" width="12%">
+                                            <strong>BBD</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="1" width="30%">
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="1" width="3%">
+                                            <strong>Qty</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="2" width="3%">
+                                            <strong>Unit</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="2" width="12%">
+                                            <strong>Price HK$</strong>
+                                        </th>
+                                        <th class="text-center" style="border:2px solid black;" colspan="2" width="15%">
+                                            <strong>Amount HK$</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody width="100%">
+
+                                    <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+                                    <t t-set="index" t-value="1"/>
+                                    <t t-set="total" t-value="0"/>
+
+                                    <t t-foreach="lines" t-as="line">
+                                        <t t-if="line.product_id">
+                                            <tr>
+                                                <td class="text-center" style="border: 2px solid black;" colspan="2" width="5%">
+                                                    <span t-esc="index"/>
+                                                </td>
+
+                                                <td class="text-center" style="border: 2px solid black" colspan="1" width="12%">
+                                                    <t t-if="line.product_id.best_before_date">
+                                                        <span t-esc="line.product_id.best_before_date.strftime('%d-%m-%Y')"/>
+                                                    </t>
+                                                </td>
+
+                                                <td class="text-start" style="border: 2px solid black" colspan="1" width="30%">
+                                                    <span t-esc="line.product_id.name"/>
+                                                </td>
+
+                                                <td class="text-center" style="border: 2px solid black" colspan="1" width="3%">
+                                                    <span t-esc="line.quantity"/>
+                                                </td>
+
+                                                <td class="text-center" style="border: 2px solid black" colspan="2" width="3%">
+                                                    <span t-esc="line.product_id.uom_name"/>
+                                                </td>
+
+                                                <td class="text-center" style="border: 2px solid black" colspan="2" width="12%">
+                                                    <span t-esc="line.price_unit"/>
+                                                </td>
+
+                                                <td class="text-center" style="border: 2px solid black" colspan="2" width="15%">
+                                                    <span t-esc="line.price_subtotal"/>
+                                                    <t t-set="total" t-value="total + line.price_subtotal"/>
+                                                </td>
+                                                <t t-set="index" t-value="index + 1"/>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                    <tr>
+                                        <td style="border: 2px solid black" colspan="7"></td>
+                                        <td style="border: 2px solid black" class="text-center" colspan="2">Total:</td>
+                                        <td style="border: 2px solid black" class="text-center" colspan="2"><span t-esc="total"/></td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+
+                            <div style="margin-top: 15px; page-break: avoid;">
+                                <span>Remarks:<br/>
+                                1. Cheque Should be crossed and made payable to: Srikandi Food Company Limited<br/>
+                                2. HSBC account: 582-413910-8383 (FPS 103409777)
+                                </span>
+                            </div>
+
+                            <div style="margin-top: 100px; page-break: avoid;">
+                                <span>
+                                    For and on behalf of<br/>
+                                    Srikandi Food Company Limited
+                                </span>
+                                <div style="height: 90px; width: 250px; border-bottom: 2px solid black">
+                                    <img class="company-chop" t-if="o.company_id.company_chop" t-att-src="image_data_uri(o.company_id.company_chop)" alt="Chop" style="max-height: 80px; margin-left: 5px;"/>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="footer" style="padding-top: 5px;">
+                            <div class="d-flex justify-content-center">
+                                <div class="text-center">
+                                    <table class="table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td width="500px;" colspan="3" style="font-size: 13px;">Flat E, 6/F, Co-Tack Industrial Building, 17 Kin Fat Street, Tuen Mun, Hong Kong</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 13px;">Tel: (852) 25151152</td>
+                                                <td style="font-size: 13px;">Fax: (852) 24758901</td>
+                                                <td style="font-size: 13px;">Website: www.tempehplant.com</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t> 
+        </xpath>        
+	</template>
+
+
+</odoo>
