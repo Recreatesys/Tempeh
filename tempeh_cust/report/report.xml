@@ -15,4 +15,38 @@
         <field name="header_line" eval="False"/>
     </record>
 
+
+    <record id="custom_paper_format_sale_order_tempeh" model="report.paperformat">
+        <field name="name">Tempeh Sale Order Paper Format</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">65</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_spacing">55</field>
+        <field name="dpi">90</field>
+        <field name="header_line" eval="False"/>
+    </record>
+
+
+    <record id="action_report_saleorder_tempeh" model="ir.actions.report">
+        <field name="name">Tempeh Quotation</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tempeh_cust.report_saleorder_tempeh</field>
+        <field name="report_file">tempeh_cust.report_saleorder_tempeh</field>
+        <field name="print_report_name">
+            (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name)
+            or
+            'Sale Order - %s' % (object.name))
+        </field>
+        <field name="paperformat_id" ref="tempeh_cust.custom_paper_format_sale_order_tempeh" />
+        <field name="binding_model_id" ref="sale.model_sale_order" />
+        <field name="binding_type">report</field>
+    </record>
+
 </odoo>

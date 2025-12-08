@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <template id="saleorder_header_info">
+        <div class="text-center">
+            <span style="font-size: 22px;">銷售發票</span>
+        </div>
+
+        <div style="display: flex; justify-content: center">
+            <div style="width:65%; display: inline-block;">
+                <table class="table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>簡稱:</td>
+                            <td style="border-bottom: 2px solid black; width: 120px; padding-left: 5px; font-size: 14px;"><t t-esc="o.partner_id.name"/></td>
+                            <td style="text-align: center;">公司編號:</td>
+                            <td style="border-bottom: 2px solid black; width: 120px;"><t t-if="o.partner_id.company_registry" t-esc="o.partner_id.company_registry"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table-borderless">
+                    <tbody>
+                        <tr>
+                            <td style="height: 23px;" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>聯絡人：</td>
+                            <td style="width: 200px;"><t t-esc="o.partner_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td>送貨地址：</td>
+                            <td style="width: 200px;"><div t-field="o.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;,], &quot;no_marker&quot;: True}" style="font-weight:bold;"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <table class="table-borderless" style="width:30%; display: inline-block; vertical-align: top;">
+                <tbody>
+                    <tr>
+                        <td style="width: 80px;">發票編號</td>
+                        <td style="width: 10px;">:</td>
+                        <td style="white-space: nowrap;"><t t-esc="o.name"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px;">發票日期</td>
+                        <td style="width: 10px;">:</td>
+                        <td style="white-space: nowrap;"><t t-esc="o.date_order.strftime('%d/%m/%Y')"/></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px;">頁數</td>
+                        <td style="width: 10px;">:</td>
+                        <td>
+                            <div>
+                                <span class="page"/> / <span class="topage"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 80px;">付款條款</td>
+                        <td style="width: 10px;">:</td>
+                        <td><t t-if="o.payment_term_id" t-esc="o.payment_term_id.name"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+
+
+    <template id="saleorder_content">
+        <table class="table table-sm table-borderless mt-2">
+            <thead width="100%">
+                <tr>
+                    <th class="text-start" style="border-bottom:1px solid black;" colspan="2" width="20%">
+                        <span>產品編號</span>
+                    </th>
+                    <th class="text-start" style="border-bottom:1px solid black;" colspan="1" width="30%">
+                        <span>描述</span>
+                    </th>
+                    <th class="text-end" style="border-bottom:1px solid black;" colspan="1" width="20%">
+                        <span>數量</span>
+                    </th>
+                    <th class="text-center" style="border-bottom:1px solid black;" colspan="2" width="10%">
+                        <span>單價</span>
+                    </th>
+                    <th class="text-center" style="border-bottom:1px solid black;" colspan="2" width="10%">
+                        <span>折扣</span>
+                    </th>
+                    <th class="text-end" style="border-bottom:1px solid black;" colspan="2" width="10%">
+                        <span>金額</span>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <t t-foreach="o.order_line" t-as="so_line">
+                    <t t-if="not so_line.display_type">
+                        <tr>
+                            <td class="text-start" colspan="2" width="20%">
+                                <t t-esc="so_line.product_template_id.default_code"/>
+                            </td>
+
+                            <td class="text-start" colspan="1" width="30%">
+                                <t t-esc="so_line.name"/>
+                            </td>
+
+                            <td class="text-end" colspan="1" width="20%">
+                                <t t-esc="str(so_line.product_uom_qty) + ' ' + so_line.product_uom.name"/>
+                            </td>
+
+                            <td class="text-center" colspan="2" width="10%">
+                                <t t-esc="'{:,.2f}'.format(so_line.price_unit)"/>
+                            </td>
+
+                            <td class="text-center" colspan="2" width="10%">
+                                <t t-esc="'{:,.2f}'.format(so_line.discount)"/>
+                            </td>
+
+                            <td class="text-end" colspan="2" width="10%">
+                                <t t-esc="'{:,.2f}'.format(so_line.price_subtotal)"/>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+        </table>
+
+        <div width="100%" class="d-flex justify-content-between" style="border-top: 1px solid black;">
+            <div>
+                <t t-set="chinese_total" t-value="o.num2chinese(o.amount_total, big=True, simp=False)"/>
+                <t t-if="int(o.amount_total) == o.amount_total">
+                    <t t-set="chinese_total" t-value="chinese_total[0:len(chinese_total)-2] + '圓整'"/>
+                </t>
+                <t t-else="">
+                    <t t-set="chinese_total" t-value="chinese_total + '圓'"/>
+                </t>
+                <t t-esc="chinese_total"/>
+            </div>
+            <div><t t-esc="'總金額: ' + '{:,.2f}'.format(o.amount_total)"/></div>
+        </div>
+
+        <div width="100%" style="margin-top: 15px;">
+            <strong>Notes ：</strong><br/>
+            <span style="font-size: 15px;">1. Cheque Should be crossed and made payable to : Srikandi Food Company Limited</span><br/>
+            <span style="font-size: 15px;">2. HSBC account : 582-413910-838 (FPS:103409777)</span>
+        </div>
+
+        <div width="100%" style="display: flex; justify-content: center; margin-top: 15px;">
+            <table width="45%" style="display: inline-block" class="table-borderless">
+                <tbody>
+                    <tr><td>For and on behalf of</td></tr>
+                    <tr><td><t t-esc="o.partner_id.name"/></td></tr>
+                    <tr><td style="border-bottom: 1px solid black;" height="85px;"></td></tr>
+                    <tr><td style="font-size: 15px">Authorized Signature &amp; Company Chop</td></tr>
+                </tbody>
+            </table>
+
+            <table width="45%" style="display: inline-block; margin-left: 25px;" class="table-borderless">
+                <tbody>
+                    <tr><td>For and on behalf of</td></tr>
+                    <tr><td>印豪食品有限公司</td></tr>
+                    <tr><td style="border-bottom: 1px solid black;" height="85px;"></td></tr>
+                    <tr><td style="font-size: 15px">Authorized Signature &amp; Company Chop</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div width="100%">
+            <span style="font-size: 13px;">退貨表 <strong style="font-size: 14px;">RETURN INWARD Form</strong></span>
+            <table width="100%" class="table-borderless" style="page-break: avoid;">
+                <tbody>
+                    <tr>
+                        <td style="font-size: 12px; white-space: nowrap;">Date 日期 Tanggal:</td>
+                        <td style="border-bottom: 1.5px solid black; width: 160px; font-size: 12px; padding-left: 5px;"><t t-esc="datetime.datetime.today().strftime('%d/%m/%Y')"/></td>
+                        <td style="font-size: 12px; white-space: nowrap;"><strong>Customer</strong>  客戶:</td>
+                        <td style="border-bottom: 1.5px solid black; width: 330px; font-size: 12px; padding-left: 5px;"><t t-esc="o.partner_id.name"/></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table width="100%" style="margin-top: 5px; page-break: avoid; border: 1px solid black;">
+                <thead>
+                    <tr>
+                        <th class="text-start" style="font-size: 12px; padding-left: 5px; border: 1px solid black;" colspan="2" width="40%">
+                            <span>貨品  Description</span>
+                        </th>
+                        <th class="text-start" style="font-size: 12px; padding-left: 5px; border: 1px solid black;" colspan="1" width="25%">
+                            <span>數量</span>
+                        </th>
+                        <th class="text-center" style="font-size: 12px; border: 1px solid black;" colspan="1" width="15%">
+                            <span>價  Price</span>
+                        </th>
+                        <th class="text-start" style="font-size: 12px; padding-left: 5px; border: 1px solid black;" colspan="2" width="25%">
+                            <span>總數</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                        <td style="border: 1px solid black;" colspan="1" height="20px;"></td>
+                        <td colspan="1" height="20px;" style="font-size: 12px; text-align: center; border: 1px solid black;">Total/總數</td>
+                        <td style="border: 1px solid black;" colspan="2" height="20px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+
+	<template id="report_saleorder_tempeh">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <div class="d-flex justify-content-start">
+                        <div class="text-center" style="margin-left: 140px;">
+                            <span style="font-size: 20px;">印豪食品有限公司</span><br/>
+                            <span style="font-size: 22px; white-space: nowrap;"><strong>Srikandi Food Company Limited</strong></span>
+                            <div><span style="font-size: 13px;">屯門建發街17號同德工業大廈6樓E室</span></div>
+                            <div><span style="font-size: 13px;">TEL: (852) 2475 2930</span></div>
+                        </div>
+                        <div class="text-center" style="margin-left: 345px;">
+                            <span style="font-size: 20px;">印豪食品有限公司</span><br/>
+                            <span style="font-size: 22px; white-space: nowrap;"><strong>Srikandi Food Company Limited</strong></span>
+                            <div><span style="font-size: 13px;">屯門建發街17號同德工業大廈6樓E室</span></div>
+                            <div><span style="font-size: 13px;">TEL: (852) 2475 2930</span></div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <div style="width: 47%;">
+                            <t t-call="tempeh_cust.saleorder_header_info"/>
+                        </div>
+
+                        <div style="width: 47%; margin-left: 75px;">
+                            <t t-call="tempeh_cust.saleorder_header_info"/>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="article">
+                    <div class="page">
+
+                        <div class="d-flex justify-content-start">
+                            <div style="width: 47%;">
+                                <t t-call="tempeh_cust.saleorder_content"/>
+                            </div>
+
+                            <div style="width: 47%; margin-left: 75px;">
+                                <t t-call="tempeh_cust.saleorder_content"/>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </t>
+        </t> 
+	</template>
+</odoo>
