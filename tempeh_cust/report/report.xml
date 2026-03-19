@@ -33,6 +33,30 @@
     </record>
 
 
+    <!-- Landscape paper format for the duplicate invoice -->
+    <record id="custom_paper_format_invoice_landscape" model="report.paperformat">
+        <field name="name">Tempeh Invoice Landscape</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">65</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_spacing">55</field>
+        <field name="dpi">90</field>
+        <field name="header_line" eval="False"/>
+    </record>
+
+
+    <!-- Override account invoice report to use landscape format -->
+    <record id="account.action_account_invoice_report_action" model="ir.actions.report">
+        <field name="paperformat_id" ref="tempeh_cust.custom_paper_format_invoice_landscape"/>
+    </record>
+
+
     <record id="action_report_saleorder_tempeh" model="ir.actions.report">
         <field name="name">Tempeh Quotation</field>
         <field name="model">sale.order</field>
