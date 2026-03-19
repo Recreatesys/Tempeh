@@ -5,88 +5,86 @@
     <template id="invoice_copy_content">
 
         <!-- Customer info + Invoice meta -->
-        <div style="display: flex; margin-top: 8px; width: 100%;">
+        <table class="inv-no-border" width="100%" style="font-size: 15px; margin-top: 4px; border-collapse: collapse; border: none;">
+            <tr>
+                <!-- Left: Customer details -->
+                <td width="50%" style="vertical-align: top; border: none; padding-right: 6px;">
+                    <table class="inv-no-border" style="font-size: 15px; border-collapse: collapse; border: none; width: 100%;">
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>Customer:</strong></td>
+                            <td style="border: none; padding: 1px 0;"><t t-esc="o.partner_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; vertical-align: top; padding: 1px 6px 1px 0;"><strong>Address:</strong></td>
+                            <td style="border: none; padding: 1px 0;">
+                                <span t-field="o.partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; vertical-align: top; padding: 1px 6px 1px 0;"><strong>Attn:</strong></td>
+                            <td style="border: none; padding: 1px 0;"><t t-if="o.attn"><span t-esc="o.attn"/></t></td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; vertical-align: top; padding: 1px 6px 1px 0;"><strong>Tel:</strong></td>
+                            <td style="border: none; padding: 1px 0;"><t t-if="o.partner_id.phone"><span t-esc="o.partner_id.phone"/></t></td>
+                        </tr>
+                    </table>
+                </td>
 
-            <table class="table table-sm table-borderless" style="font-size: 12px; width: 50%;">
-                <tbody>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>Customer:</strong></td>
-                        <td><t t-esc="o.partner_id.name"/></td>
-                    </tr>
-                    <tr>
-                        <td style="vertical-align: top; padding-right: 6px;"><strong>Address:</strong></td>
-                        <td>
-                            <span t-field="o.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-right: 6px;"><strong>Attn:</strong></td>
-                        <td>
-                            <t t-if="o.attn"><span t-esc="o.attn"/></t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-right: 6px;"><strong>Tel:</strong></td>
-                        <td>
-                            <t t-if="o.partner_id.phone"><span t-esc="o.partner_id.phone"/></t>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table class="table table-sm table-borderless" style="font-size: 12px; width: 50%;">
-                <tbody>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>Invoice No:</strong></td>
-                        <td style="white-space: nowrap;"><t t-esc="o.name"/></td>
-                    </tr>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>Invoice Date:</strong></td>
-                        <td style="white-space: nowrap;">
-                            <t t-if="o.invoice_date">
-                                <span t-esc="o.invoice_date.strftime('%d-%m-%Y')"/>
-                            </t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>DN No.:</strong></td>
-                        <td style="white-space: nowrap;">
-                            <t t-if="o.dn_no"><span t-esc="o.dn_no"/></t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>Delivery Date:</strong></td>
-                        <td style="white-space: nowrap;">
-                            <t t-if="o.delivery_date">
-                                <span t-esc="o.delivery_date.strftime('%d-%m-%Y')"/>
-                            </t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="white-space: nowrap; padding-right: 6px;"><strong>Payment Terms:</strong></td>
-                        <td>
-                            <t t-if="o.invoice_payment_term_id">
-                                <span t-esc="o.invoice_payment_term_id.name"/>
-                            </t>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
+                <!-- Right: Invoice meta -->
+                <td width="50%" style="vertical-align: top; border: none;">
+                    <table class="inv-no-border" style="font-size: 15px; border-collapse: collapse; border: none; width: 100%;">
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>Invoice No:</strong></td>
+                            <td style="border: none; white-space: nowrap; padding: 1px 0;"><t t-esc="o.name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>Invoice Date:</strong></td>
+                            <td style="border: none; white-space: nowrap; padding: 1px 0;">
+                                <t t-if="o.invoice_date">
+                                    <span t-esc="o.invoice_date.strftime('%d-%m-%Y')"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>DN No.:</strong></td>
+                            <td style="border: none; white-space: nowrap; padding: 1px 0;">
+                                <t t-if="o.dn_no"><span t-esc="o.dn_no"/></t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>Delivery Date:</strong></td>
+                            <td style="border: none; white-space: nowrap; padding: 1px 0;">
+                                <t t-if="o.delivery_date">
+                                    <span t-esc="o.delivery_date.strftime('%d-%m-%Y')"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; white-space: nowrap; padding: 1px 6px 1px 0; vertical-align: top;"><strong>Payment Terms:</strong></td>
+                            <td style="border: none; padding: 1px 0;">
+                                <t t-if="o.invoice_payment_term_id">
+                                    <span t-esc="o.invoice_payment_term_id.name"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <!-- Line items table -->
-        <table class="table table-sm mt-1" style="font-size: 12px; border: 1.5px solid black;">
+        <table width="100%" style="font-size: 15px; border: 1.5px solid black; border-collapse: collapse; margin-top: 6px;">
             <thead>
                 <tr>
-                    <th class="text-center" style="border: 1.5px solid black;" width="5%"><strong>Item#</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="12%"><strong>BBD</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="33%"><strong>Description</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="8%"><strong>Qty</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="8%"><strong>Unit</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="15%"><strong>Price HK$</strong></th>
-                    <th class="text-center" style="border: 1.5px solid black;" width="19%"><strong>Amount HK$</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="5%"><strong>Item#</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="12%"><strong>BBD</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="33%"><strong>Description</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="8%"><strong>Qty</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="8%"><strong>Unit</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="15%"><strong>Price HK$</strong></th>
+                    <th style="border: 1.5px solid black; padding: 2px 4px; text-align: center;" width="19%"><strong>Amount HK$</strong></th>
                 </tr>
             </thead>
             <tbody>
@@ -97,27 +95,27 @@
                 <t t-foreach="lines" t-as="line">
                     <t t-if="line.product_id">
                         <tr>
-                            <td class="text-center" style="border: 1.5px solid black;" width="5%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <span t-esc="index"/>
                             </td>
-                            <td class="text-center" style="border: 1.5px solid black;" width="12%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <t t-if="line.product_id.best_before_date">
                                     <span t-esc="line.product_id.best_before_date.strftime('%d-%m-%Y')"/>
                                 </t>
                             </td>
-                            <td class="text-start" style="border: 1.5px solid black;" width="33%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: left;">
                                 <span t-esc="line.product_id.name"/>
                             </td>
-                            <td class="text-center" style="border: 1.5px solid black;" width="8%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <span t-esc="line.quantity"/>
                             </td>
-                            <td class="text-center" style="border: 1.5px solid black;" width="8%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <span t-esc="line.product_id.uom_name"/>
                             </td>
-                            <td class="text-center" style="border: 1.5px solid black;" width="15%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <span t-esc="line.price_unit"/>
                             </td>
-                            <td class="text-center" style="border: 1.5px solid black;" width="19%">
+                            <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;">
                                 <span t-esc="line.price_subtotal"/>
                                 <t t-set="total" t-value="total + line.price_subtotal"/>
                             </td>
@@ -127,28 +125,24 @@
                 </t>
 
                 <tr>
-                    <td style="border: 1.5px solid black;" colspan="5"></td>
-                    <td style="border: 1.5px solid black;" class="text-center"><strong>Total:</strong></td>
-                    <td style="border: 1.5px solid black;" class="text-center"><strong><span t-esc="total"/></strong></td>
+                    <td style="border: 1.5px solid black; padding: 2px 4px;" colspan="5"></td>
+                    <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;"><strong>Total:</strong></td>
+                    <td style="border: 1.5px solid black; padding: 2px 4px; text-align: center;"><strong><span t-esc="total"/></strong></td>
                 </tr>
             </tbody>
         </table>
 
         <!-- Remarks -->
-        <div style="margin-top: 10px; font-size: 12px;">
-            <span>
-                Remarks:<br/>
-                1. Cheque Should be crossed and made payable to: Srikandi Food Company Limited<br/>
-                2. HSBC account: 582-413910-8383 (FPS 103409777)
-            </span>
+        <div style="margin-top: 8px; font-size: 12px;">
+            Remarks:<br/>
+            1. Cheque Should be crossed and made payable to: Srikandi Food Company Limited<br/>
+            2. HSBC account: 582-413910-8383 (FPS 103409777)
         </div>
 
         <!-- Signature block -->
-        <div style="margin-top: 60px;">
-            <span style="font-size: 12px;">
-                For and on behalf of<br/>
-                Srikandi Food Company Limited
-            </span>
+        <div style="margin-top: 40px; font-size: 12px;">
+            For and on behalf of<br/>
+            Srikandi Food Company Limited
             <div style="height: 70px; width: 200px; border-bottom: 2px solid black; margin-top: 4px;">
                 <img class="company-chop"
                     t-if="o.company_id.company_chop"
@@ -159,10 +153,9 @@
         </div>
 
         <!-- Return Inward Form -->
-        <div style="margin-top: 12px;">
-            <span style="font-size: 13px;">退貨表 <strong style="font-size: 14px;">RETURN INWARD Form</strong></span>
-
-            <table style="width: 100%; margin-top: 4px; border-collapse: collapse; font-size: 12px;">
+        <div style="margin-top: 10px;">
+            <span style="font-size: 16px;">退貨表 <strong style="font-size: 17px;">RETURN INWARD Form</strong></span>
+            <table width="100%" style="margin-top: 4px; border-collapse: collapse; font-size: 15px;">
                 <thead>
                     <tr>
                         <th style="border: 1px solid black; padding: 3px 5px; text-align: left;" width="40%">貨品 Description</th>
@@ -193,7 +186,7 @@
                     <tr>
                         <td style="border: 1px solid black; height: 20px;"></td>
                         <td style="border: 1px solid black;"></td>
-                        <td style="border: 1px solid black; font-size: 11px; text-align: center;">Total / 總數</td>
+                        <td style="border: 1px solid black; font-size: 14px; text-align: center;">Total / 總數</td>
                         <td style="border: 1px solid black;"></td>
                     </tr>
                 </tbody>
@@ -209,96 +202,93 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
 
+                    <!-- Make unwanted table borders invisible (white) -->
+                    <style>
+                        .inv-no-border, .inv-no-border td, .inv-no-border th {
+                            border-color: white !important;
+                            box-shadow: none !important;
+                        }
+                        .inv-no-border {
+                            border-collapse: collapse !important;
+                        }
+                    </style>
+
                     <!-- Page header: two company headers side by side -->
                     <div class="header">
-                        <div style="display: flex; align-items: center;">
-
-                            <div style="width: 48%; font-size: 14px; position: relative; display: flex; align-items: center;">
-                                <img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="max-width: 70px; margin-right: 10px;"/>
-                                <div>
-                                    <strong>印豪食品有限公司</strong><br/>
-                                    <strong>Srikandi Food Company Limited</strong>
-                                </div>
-                                <div style="position: absolute; top: 0; right: 0;">
-                                    <h3><strong>INVOICE</strong></h3>
-                                </div>
-                            </div>
-
-                            <div style="border-left: 1.5px dashed #aaa; height: 60px; margin: 0 8px;"></div>
-
-                            <div style="width: 48%; font-size: 14px; position: relative; display: flex; align-items: center;">
-                                <img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="max-width: 70px; margin-right: 10px;"/>
-                                <div>
-                                    <strong>印豪食品有限公司</strong><br/>
-                                    <strong>Srikandi Food Company Limited</strong>
-                                </div>
-                                <div style="position: absolute; top: 0; right: 0;">
-                                    <h3><strong>INVOICE</strong></h3>
-                                </div>
-                            </div>
-
-                        </div>
+                        <table class="inv-no-border" width="100%" style="border-collapse: collapse; border: none;">
+                            <tr>
+                                <!-- Copy 1 header -->
+                                <td width="48%" style="border: none; vertical-align: middle; border-right: 1.5px dashed #aaa; padding-right: 8px;">
+                                    <table class="inv-no-border" width="100%" style="border-collapse: collapse; border: none;">
+                                        <tr>
+                                            <td style="border: none; width: 75px; vertical-align: middle; padding: 0;">
+                                                <img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="max-width: 70px;"/>
+                                            </td>
+                                            <td style="border: none; vertical-align: middle; font-size: 14px; padding: 0 6px;">
+                                                <strong>印豪食品有限公司</strong><br/>
+                                                <strong>Srikandi Food Company Limited</strong>
+                                            </td>
+                                            <td style="border: none; vertical-align: top; text-align: right; white-space: nowrap; padding: 0;">
+                                                <h3 style="margin: 0;"><strong>INVOICE</strong></h3>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <!-- Copy 2 header -->
+                                <td width="48%" style="border: none; vertical-align: middle; padding-left: 8px;">
+                                    <table class="inv-no-border" width="100%" style="border-collapse: collapse; border: none;">
+                                        <tr>
+                                            <td style="border: none; width: 75px; vertical-align: middle; padding: 0;">
+                                                <img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="max-width: 70px;"/>
+                                            </td>
+                                            <td style="border: none; vertical-align: middle; font-size: 14px; padding: 0 6px;">
+                                                <strong>印豪食品有限公司</strong><br/>
+                                                <strong>Srikandi Food Company Limited</strong>
+                                            </td>
+                                            <td style="border: none; vertical-align: top; text-align: right; white-space: nowrap; padding: 0;">
+                                                <h3 style="margin: 0;"><strong>INVOICE</strong></h3>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
 
                     <div class="article">
                         <div class="page">
 
                             <!-- Two invoice copies side by side -->
-                            <div style="display: flex; width: 100%; gap: 0;">
-
-                                <!-- Copy 1 -->
-                                <div style="width: 48%;">
-                                    <t t-call="tempeh_cust.invoice_copy_content"/>
-                                </div>
-
-                                <!-- Divider -->
-                                <div style="border-left: 1.5px dashed #aaa; margin: 0 8px;"></div>
-
-                                <!-- Copy 2 -->
-                                <div style="width: 48%;">
-                                    <t t-call="tempeh_cust.invoice_copy_content"/>
-                                </div>
-
-                            </div>
+                            <table class="inv-no-border" width="100%" style="border-collapse: collapse; border: none;">
+                                <tr>
+                                    <!-- Copy 1 -->
+                                    <td width="48%" style="border: none; vertical-align: top; border-right: 1.5px dashed #aaa; padding-right: 8px;">
+                                        <t t-call="tempeh_cust.invoice_copy_content"/>
+                                    </td>
+                                    <!-- Copy 2 -->
+                                    <td width="48%" style="border: none; vertical-align: top; padding-left: 8px;">
+                                        <t t-call="tempeh_cust.invoice_copy_content"/>
+                                    </td>
+                                </tr>
+                            </table>
 
                         </div>
                     </div>
 
                     <!-- Page footer: two separate copies side by side -->
-                    <div class="footer" style="padding-top: 4px;">
-                        <div style="display: flex; justify-content: space-around;">
-
-                            <div class="text-center" style="width: 47%;">
-                                <table class="table-borderless" style="margin: 0 auto;">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="3" style="font-size: 9px;">Flat E, 6/F, Co-Tack Industrial Building, 17 Kin Fat Street, Tuen Mun, Hong Kong</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 9px;">Tel: (852) 25151152</td>
-                                            <td style="font-size: 9px; padding: 0 8px;">Fax: (852) 24758901</td>
-                                            <td style="font-size: 9px;">Website: www.tempehplant.com</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="text-center" style="width: 47%;">
-                                <table class="table-borderless" style="margin: 0 auto;">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="3" style="font-size: 9px;">Flat E, 6/F, Co-Tack Industrial Building, 17 Kin Fat Street, Tuen Mun, Hong Kong</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 9px;">Tel: (852) 25151152</td>
-                                            <td style="font-size: 9px; padding: 0 8px;">Fax: (852) 24758901</td>
-                                            <td style="font-size: 9px;">Website: www.tempehplant.com</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
+                    <div class="footer" style="padding-top: 2px;">
+                        <table class="inv-no-border" width="100%" style="border-collapse: collapse; border: none;">
+                            <tr>
+                                <td width="48%" style="border: none; text-align: center; border-right: 1.5px dashed #aaa; padding-right: 8px; font-size: 9px;">
+                                    Flat E, 6/F, Co-Tack Industrial Building, 17 Kin Fat Street, Tuen Mun, Hong Kong<br/>
+                                    Tel: (852) 25151152 | Fax: (852) 24758901 | Website: www.tempehplant.com
+                                </td>
+                                <td width="48%" style="border: none; text-align: center; padding-left: 8px; font-size: 9px;">
+                                    Flat E, 6/F, Co-Tack Industrial Building, 17 Kin Fat Street, Tuen Mun, Hong Kong<br/>
+                                    Tel: (852) 25151152 | Fax: (852) 24758901 | Website: www.tempehplant.com
+                                </td>
+                            </tr>
+                        </table>
                     </div>
 
                 </t>
