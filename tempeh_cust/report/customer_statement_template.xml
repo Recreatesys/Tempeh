@@ -20,10 +20,8 @@
                         </div>
                     </div>
                     <div class="col-6 text-end">
-                        <strong t-field="doc.name"/>
-                        <div t-if="doc.contact_address" style="white-space: pre-line;"
-                             t-out="doc.contact_address"/>
-                        <div t-if="doc.vat">VAT: <span t-out="doc.vat"/></div>
+                        <div class="mb-0" t-field="doc.statement_partner_id"
+                             t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": true}'/>
                     </div>
                 </div>
 

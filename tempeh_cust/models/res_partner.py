@@ -5,6 +5,15 @@ from odoo import models, fields, api, _
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    # Self-reference so the QWeb contact widget can render this partner's
+    # name + address + VAT block (mirrors the wangchao statement header).
+    statement_partner_id = fields.Many2one(
+        'res.partner', compute='_compute_statement_partner_id', string='Statement Partner')
+
+    def _compute_statement_partner_id(self):
+        for rec in self:
+            rec.statement_partner_id = rec
+
     def _get_statement_report_name(self):
         """Filename for the printed customer statement (催款報表 / 客戶月結單)."""
         if len(self) == 1:
