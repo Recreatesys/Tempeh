@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_customer_statement_wizard_form" model="ir.ui.view">
+            <field name="name">customer.statement.wizard.form</field>
+            <field name="model">customer.statement.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Customer Statement Date Range">
+                    <group>
+                        <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_customer_statements" type="object"
+                                string="Print Statements" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action that opens the date-range wizard -->
+        <record id="action_customer_statement_wizard" model="ir.actions.act_window">
+            <field name="name">催款報表</field>
+            <field name="res_model">customer.statement.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_customer_statement_wizard_form"/>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

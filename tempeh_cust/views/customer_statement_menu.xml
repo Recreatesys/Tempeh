@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Action on contacts: select customers -> Action -> Print Customer Statements -->
+        <record id="action_open_customer_statement_wizard_server" model="ir.actions.server">
+            <field name="name">Print Customer Statements</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = {
+        'name': '催款報表',
+        'type': 'ir.actions.act_window',
+        'res_model': 'customer.statement.wizard',
+        'view_mode': 'form',
+        'target': 'new',
+        'context': {'default_partner_ids': [(6, 0, records.ids)]},
+    }
+            </field>
+        </record>
+
+        <!-- Menu under Accounting -> Customers -->
+        <menuitem id="menu_customer_statement_report"
+                  name="催款報表"
+                  parent="account.menu_finance_receivables"
+                  action="action_customer_statement_wizard"
+                  sequence="50"/>
+    </data>
+</odoo>

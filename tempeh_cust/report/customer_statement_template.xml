@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="report_customer_statement_document">
+        <t t-set="stmt" t-value="doc._get_customer_statement_lines(
+            data.get('start_date') if data else None,
+            data.get('end_date') if data else None)"/>
+        <t t-set="currency" t-value="stmt['currency']"/>
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="text-center mb-2">
+                    <h2 class="mb-1">客戶月結單</h2>
+                    <div class="row text-muted">
+                        <span t-out="stmt['start_date_str']"/> 至 <span t-out="stmt['end_date_str']"/>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-7">
+                        <strong t-field="doc.name"/>
+                        <div t-if="doc.contact_address" style="white-space: pre-line;"
+                             t-out="doc.contact_address"/>
+                        <div t-if="doc.vat">VAT: <span t-out="doc.vat"/></div>
+                    </div>
+                </div>
+
+                <table class="table table-sm o_main_table" style="border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th class="text-start border-start border-end border-dark-subtle" scope="col">日期</th>
+                            <th class="text-start border-start border-end border-dark-subtle" scope="col">摘要</th>
+                            <th class="text-start border-start border-end border-dark-subtle" scope="col">到期繳付日</th>
+                            <th class="text-end border-start border-end border-dark-subtle" scope="col">金額</th>
+                            <th class="text-end border-start border-end border-dark-subtle" scope="col">
+                                累計未付餘額<span t-out="currency.name"/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border-start border-end border-dark-subtle"/>
+                            <td class="border-start border-end border-dark-subtle">初期未付餘額</td>
+                            <td class="border-start border-end border-dark-subtle"/>
+                            <td class="border-start border-end border-dark-subtle"/>
+                            <td class="text-end border-start border-end border-dark-subtle">
+                                <span t-out="stmt['opening']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                        <tr t-foreach="stmt['lines']" t-as="line">
+                            <td class="border-start border-end border-dark-subtle align-middle">
+                                <span t-out="line['date_str']"/>
+                            </td>
+                            <td class="border-start border-end border-dark-subtle text-wrap">
+                                <t t-if="line['move_type']">
+                                    <small t-out="line['move_type']" class="text-muted"/><br/>
+                                </t>
+                                <span t-out="line['activity']"/>
+                                <t t-if="line['reference']">
+                                    <br/><small t-out="line['reference']" class="text-muted"/>
+                                </t>
+                            </td>
+                            <td class="border-start border-end border-dark-subtle align-middle">
+                                <span t-out="line['due_date_str']"/>
+                            </td>
+                            <td class="text-end border-start border-end border-dark-subtle align-middle">
+                                <span t-out="line['amount']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                            <td class="text-end border-start border-end border-dark-subtle align-middle">
+                                <span t-out="line['balance']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row justify-content-end mt-3">
+                    <div class="col-5 text-end">
+                        <label for="balance_due"><strong>應付餘額: </strong></label>
+                        <span id="balance_due" t-out="stmt['closing']"
+                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_customer_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="tempeh_cust.report_customer_statement_document"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
