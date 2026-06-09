@@ -9,7 +9,7 @@
     """,
     'author': 'Lau Siu Hin',
     'website': '',
-    'depends': ['contacts', 'base', 'web', 'account', 'sale_management'],
+    'depends': ['contacts', 'base', 'web', 'account', 'sale_management', 'account_followup'],
     'data': [
         "security/ir.model.access.csv",
         "views/invoice_inherit.xml",

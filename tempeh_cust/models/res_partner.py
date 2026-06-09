@@ -14,6 +14,20 @@ class ResPartner(models.Model):
         for rec in self:
             rec.statement_partner_id = rec
 
+    def open_customer_statement(self):
+        """Wire the native 'Customer Statement' button (account_followup /
+        account_reports) and the Follow-up Reports (催款報表) flow to our
+        custom 客戶月結單: open the date-range wizard for the selected
+        customer(s) instead of the standard dynamic report."""
+        return {
+            'name': '客戶月結單',
+            'type': 'ir.actions.act_window',
+            'res_model': 'customer.statement.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_partner_ids': [(6, 0, self.ids)]},
+        }
+
     def _get_statement_report_name(self):
         """Filename for the printed customer statement (催款報表 / 客戶月結單)."""
         if len(self) == 1:
