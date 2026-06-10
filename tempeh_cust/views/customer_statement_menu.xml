@@ -22,11 +22,19 @@ if records:
             </field>
         </record>
 
-        <!-- Expose the native Follow-up Reports (催款報表) screen in Accounting → Customers -->
+        <!-- Expose the native Follow-up Reports (催款報表) screen in Accounting → Customers.
+             Use the working account_report client action (the followup module's own
+             action_account_followup uses the unregistered 'account_report_followup' tag). -->
+        <record id="action_followup_report_tempeh" model="ir.actions.client">
+            <field name="name">Follow-up Reports</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.followup_report')}"/>
+        </record>
+
         <menuitem id="menu_account_followup_report"
                   name="Follow-up Reports"
                   parent="account.menu_finance_receivables"
-                  action="account_followup.action_account_followup"
+                  action="action_followup_report_tempeh"
                   groups="account.group_account_invoice"
                   sequence="11"/>
     </data>
