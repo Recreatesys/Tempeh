@@ -21,5 +21,13 @@ if records:
     }
             </field>
         </record>
+
+        <!-- Expose the native Follow-up Reports (催款報表) screen in Accounting → Customers -->
+        <menuitem id="menu_account_followup_report"
+                  name="Follow-up Reports"
+                  parent="account.menu_finance_receivables"
+                  action="account_followup.action_account_followup"
+                  groups="account.group_account_invoice"
+                  sequence="11"/>
     </data>
 </odoo>
