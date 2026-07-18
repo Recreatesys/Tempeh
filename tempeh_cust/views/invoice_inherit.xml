@@ -132,11 +132,10 @@
             </tbody>
         </table>
 
-        <!-- Remarks -->
-        <div style="margin-top: 8px; font-size: 12px;">
-            Remarks:<br/>
-            1. Cheque Should be crossed and made payable to: Srikandi Food Company Limited<br/>
-            2. HSBC account: 582-413910-838 (FPS 103409777)
+        <!-- Remarks / Terms &amp; Conditions (editable per invoice via narration) -->
+        <t t-set="terms" t-value="o.narration or o.company_id.invoice_terms"/>
+        <div t-if="terms" style="margin-top: 8px; font-size: 12px; white-space: pre-line;">
+            <span t-out="terms"/>
         </div>
 
         <!-- Signature block -->

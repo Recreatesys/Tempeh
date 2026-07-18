@@ -142,9 +142,10 @@
         </div>
 
         <div width="100%" style="margin-top: 15px;">
-            <strong>Notes ：</strong><br/>
-            <span style="font-size: 15px;">1. Cheque Should be crossed and made payable to : Srikandi Food Company Limited</span><br/>
-            <span style="font-size: 15px;">2. HSBC account : 582-413910-838 (FPS:103409777)</span>
+            <t t-set="terms" t-value="o.note or o.company_id.invoice_terms"/>
+            <div t-if="terms" style="font-size: 15px; white-space: pre-line;">
+                <span t-out="terms"/>
+            </div>
         </div>
 
         <div width="100%" style="display: flex; justify-content: center; margin-top: 15px;">

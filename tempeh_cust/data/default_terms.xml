@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Seed the default Terms &amp; Conditions (payment remarks) once. -->
+    <function model="res.company" name="_tempeh_init_invoice_terms"/>
+</odoo>

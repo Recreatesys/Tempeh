@@ -12,6 +12,7 @@
     'depends': ['contacts', 'base', 'web', 'account', 'sale_management', 'account_followup'],
     'data': [
         "security/ir.model.access.csv",
+        "data/default_terms.xml",
         "views/invoice_inherit.xml",
         "report/report.xml",
         "report/sale_order_report.xml",
