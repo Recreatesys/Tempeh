@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Statutory leave types. Pay basis 'adw_713' = paid on 12-month average
+         daily wages; rate 0.8 = four-fifths (sickness allowance, paternity). -->
+
+    <record id="leave_type_hk_annual" model="hr.leave.type">
+        <field name="name">Annual Leave (HK Statutory)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="hk_statutory">True</field>
+        <field name="hk_pay_basis">adw_713</field>
+        <field name="hk_pay_rate">1.0</field>
+    </record>
+
+    <record id="leave_type_hk_sickness" model="hr.leave.type">
+        <field name="name">Sickness Allowance (HK Statutory)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="hk_statutory">True</field>
+        <field name="hk_pay_basis">adw_713</field>
+        <field name="hk_pay_rate">0.8</field>
+        <field name="hk_requires_proof">True</field>
+    </record>
+
+    <record id="leave_type_hk_maternity" model="hr.leave.type">
+        <field name="name">Maternity Leave (14 weeks)</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="hk_statutory">True</field>
+        <field name="hk_pay_basis">adw_713</field>
+        <field name="hk_pay_rate">0.8</field>
+    </record>
+
+    <record id="leave_type_hk_paternity" model="hr.leave.type">
+        <field name="name">Paternity Leave (5 days)</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="hk_statutory">True</field>
+        <field name="hk_pay_basis">adw_713</field>
+        <field name="hk_pay_rate">0.8</field>
+    </record>
+
+    <!-- Alternative/substituted holiday earned by working on a statutory holiday
+         (EO s.39 "day off in lieu"). Granted via hrm.hk.holiday.lieu. -->
+    <record id="leave_type_hk_lieu" model="hr.leave.type">
+        <field name="name">Holiday in Lieu 補假</field>
+        <field name="requires_allocation">yes</field>
+        <field name="request_unit">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="hk_statutory">True</field>
+        <field name="hk_pay_basis">full</field>
+        <field name="hk_pay_rate">1.0</field>
+    </record>
+</odoo>

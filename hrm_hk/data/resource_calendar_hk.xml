@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Standard HK office week: Mon-Fri, 40h, Sunday is the weekly rest day.
+         Weekly hours (summed from attendance_ids, >=18) drive the 418
+         continuous-contract flag on hr.contract. -->
+    <record id="resource_calendar_hk_standard" model="resource.calendar">
+        <field name="name">Hong Kong Standard (40h / 5-day)</field>
+        <field name="tz">Asia/Hong_Kong</field>
+        <field name="hours_per_day">8.0</field>
+        <field name="attendance_ids" eval="[(5, 0, 0),
+            (0, 0, {'name': 'Mon AM', 'dayofweek': '0', 'hour_from': 9.0,  'hour_to': 13.0, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Mon PM', 'dayofweek': '0', 'hour_from': 14.0, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+            (0, 0, {'name': 'Tue AM', 'dayofweek': '1', 'hour_from': 9.0,  'hour_to': 13.0, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Tue PM', 'dayofweek': '1', 'hour_from': 14.0, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+            (0, 0, {'name': 'Wed AM', 'dayofweek': '2', 'hour_from': 9.0,  'hour_to': 13.0, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Wed PM', 'dayofweek': '2', 'hour_from': 14.0, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+            (0, 0, {'name': 'Thu AM', 'dayofweek': '3', 'hour_from': 9.0,  'hour_to': 13.0, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Thu PM', 'dayofweek': '3', 'hour_from': 14.0, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+            (0, 0, {'name': 'Fri AM', 'dayofweek': '4', 'hour_from': 9.0,  'hour_to': 13.0, 'day_period': 'morning'}),
+            (0, 0, {'name': 'Fri PM', 'dayofweek': '4', 'hour_from': 14.0, 'hour_to': 18.0, 'day_period': 'afternoon'})
+        ]"/>
+    </record>
+</odoo>

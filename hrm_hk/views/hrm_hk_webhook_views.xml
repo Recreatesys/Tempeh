@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hrm_hk_webhook_list" model="ir.ui.view">
+        <field name="name">hrm.hk.webhook.list</field>
+        <field name="model">hrm.hk.webhook</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="url"/>
+                <field name="active"/>
+                <field name="last_delivery"/>
+                <field name="last_status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_webhook_form" model="ir.ui.view">
+        <field name="name">hrm.hk.webhook.form</field>
+        <field name="model">hrm.hk.webhook</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="url" placeholder="https://app.example.com/api/odoo/webhook"/>
+                            <field name="secret" password="True"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Subscribed Events">
+                            <field name="trig_leave_approved"/>
+                            <field name="trig_leave_refused"/>
+                            <field name="trig_payslip_posted"/>
+                        </group>
+                    </group>
+                    <group string="Delivery" col="2">
+                        <field name="last_delivery" readonly="1"/>
+                        <field name="last_status" readonly="1"/>
+                    </group>
+                    <p class="text-muted">
+                        Each POST is signed with HMAC-SHA256 over the raw body and sent
+                        in the <code>X-HRM-Signature</code> header as <code>sha256=…</code>.
+                        Verify it in the web app before trusting the payload.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_webhook" model="ir.actions.act_window">
+        <field name="name">Webhooks</field>
+        <field name="res_model">hrm.hk.webhook</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

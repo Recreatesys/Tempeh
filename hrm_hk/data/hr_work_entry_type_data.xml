@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Construction shift work-entry types. hk_display_code shows on rosters/reports.
+         Pay differs per shift via a multiplier of the hourly wage (or a fixed
+         amount/hour). C shift (overnight) pays 1.5×. -->
+
+    <record id="work_entry_type_shift_a" model="hr.work.entry.type">
+        <field name="name">A Shift</field>
+        <field name="code">A_SHIFT</field>
+        <field name="hk_display_code">A</field>
+        <field name="hk_shift">True</field>
+        <field name="hk_shift_start">9.0</field>
+        <field name="hk_shift_end">18.0</field>
+        <field name="hk_pay_mode">multiplier</field>
+        <field name="hk_pay_multiplier">1.0</field>
+    </record>
+
+    <record id="work_entry_type_shift_b" model="hr.work.entry.type">
+        <field name="name">B Shift</field>
+        <field name="code">B_SHIFT</field>
+        <field name="hk_display_code">B</field>
+        <field name="hk_shift">True</field>
+        <field name="hk_shift_start">14.0</field>
+        <field name="hk_shift_end">22.0</field>
+        <field name="hk_pay_mode">multiplier</field>
+        <field name="hk_pay_multiplier">1.0</field>
+    </record>
+
+    <record id="work_entry_type_shift_c" model="hr.work.entry.type">
+        <field name="name">C Shift</field>
+        <field name="code">C_SHIFT</field>
+        <field name="hk_display_code">C</field>
+        <field name="hk_shift">True</field>
+        <field name="hk_shift_start">20.0</field>
+        <field name="hk_shift_end">4.0</field>
+        <field name="hk_overnight">True</field>
+        <field name="hk_pay_mode">multiplier</field>
+        <field name="hk_pay_multiplier">1.5</field>
+    </record>
+</odoo>

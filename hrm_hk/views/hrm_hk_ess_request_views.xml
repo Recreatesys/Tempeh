@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hrm_hk_ess_request_list" model="ir.ui.view">
+        <field name="name">hrm.hk.ess.request.list</field>
+        <field name="model">hrm.hk.ess.request</field>
+        <field name="arch" type="xml">
+            <list string="ESS Change Requests" decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'" decoration-info="state == 'submitted'">
+                <field name="employee_id"/>
+                <field name="portlet_type"/>
+                <field name="create_date"/>
+                <field name="attachment_required" column_invisible="1"/>
+                <field name="applied" invisible="state != 'approved'" readonly="1"
+                       decoration-danger="state == 'approved' and not applied"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-info="state == 'submitted'"/>
+                <button name="action_approve" type="object" string="Approve" icon="fa-check"
+                        invisible="state != 'submitted'"/>
+                <button name="action_reject" type="object" string="Reject" icon="fa-times"
+                        invisible="state != 'submitted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_ess_request_form" model="ir.ui.view">
+        <field name="name">hrm.hk.ess.request.form</field>
+        <field name="model">hrm.hk.ess.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary" invisible="state != 'submitted'"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            invisible="state != 'submitted'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="portlet_type" readonly="state != 'draft'"/>
+                            <field name="config_id" readonly="1"/>
+                            <field name="attachment_required" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="approver_id" readonly="1" invisible="not approver_id"/>
+                            <field name="decision_date" readonly="1" invisible="not decision_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Change">
+                            <group>
+                                <field name="proposed_values" readonly="state != 'draft'"/>
+                                <field name="current_values" readonly="1" invisible="not current_values"/>
+                            </group>
+                            <field name="reason" placeholder="Why is this change requested?"/>
+                        </page>
+                        <page string="Attachment">
+                            <field name="attachment_ids"/>
+                        </page>
+                        <page string="Decision" invisible="state not in ('approved', 'rejected')">
+                            <field name="applied" readonly="1" invisible="state != 'approved'"
+                                   help="False means this portlet has no automatic write-through target yet — HR must apply the change by hand (see the activity/chatter note on the employee)."/>
+                            <field name="decision_reason"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_ess_request_search" model="ir.ui.view">
+        <field name="name">hrm.hk.ess.request.search</field>
+        <field name="model">hrm.hk.ess.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="portlet_type"/>
+                <filter name="submitted" string="Awaiting Approval" domain="[('state','=','submitted')]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state','=','rejected')]"/>
+                <group>
+                    <filter name="grp_emp" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="grp_portlet" string="Portlet" context="{'group_by':'portlet_type'}"/>
+                    <filter name="grp_state" string="Status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_ess_request" model="ir.actions.act_window">
+        <field name="name">ESS Change Requests</field>
+        <field name="res_model">hrm.hk.ess.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_hrm_hk_ess_request_search"/>
+        <field name="context">{'search_default_submitted': 1}</field>
+    </record>
+
+    <menuitem id="menu_hrm_hk_ess_request" name="ESS Change Requests"
+              parent="hr.menu_hr_root" action="action_hrm_hk_ess_request"
+              groups="hr.group_hr_user" sequence="9"/>
+
+    <!-- Portlet approval config, admin-only, alongside API Keys / Webhooks -->
+    <record id="view_hrm_hk_ess_portlet_config_list" model="ir.ui.view">
+        <field name="name">hrm.hk.ess.portlet.config.list</field>
+        <field name="model">hrm.hk.ess.portlet.config</field>
+        <field name="arch" type="xml">
+            <list string="ESS Portlet Approval Config" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="portlet_type"/>
+                <field name="attachment_required"/>
+                <field name="approver_group_ids" widget="many2many_tags"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_ess_portlet_config" model="ir.actions.act_window">
+        <field name="name">ESS Portlet Approval Config</field>
+        <field name="res_model">hrm.hk.ess.portlet.config</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

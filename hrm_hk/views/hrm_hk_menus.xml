@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee web-app integration settings, grouped under Employees > Configuration -->
+    <menuitem id="menu_hrm_hk_root" name="Web App Integration"
+              parent="hr.menu_hr_root"
+              groups="group_hrm_hk_admin" sequence="90"/>
+
+    <menuitem id="menu_hrm_hk_api_key" name="API Keys"
+              parent="menu_hrm_hk_root"
+              action="action_hrm_hk_api_key" sequence="10"/>
+
+    <menuitem id="menu_hrm_hk_webhook" name="Webhooks"
+              parent="menu_hrm_hk_root"
+              action="action_hrm_hk_webhook" sequence="20"/>
+
+    <menuitem id="menu_hrm_hk_ess_portlet_config" name="ESS Portlet Approval Config"
+              parent="menu_hrm_hk_root"
+              action="action_hrm_hk_ess_portlet_config" sequence="30"/>
+</odoo>

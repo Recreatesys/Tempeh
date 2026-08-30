@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Statutory reference values (current 2026). Update on each annual review. -->
+    <record id="param_hk_smw" model="ir.config_parameter">
+        <field name="key">hrm_hk.statutory_min_wage_hourly</field>
+        <field name="value">43.1</field>
+    </record>
+    <record id="param_hk_wage_record_cap" model="ir.config_parameter">
+        <field name="key">hrm_hk.wage_record_monthly_cap</field>
+        <field name="value">17600</field>
+    </record>
+    <record id="param_hk_lsp_wage_cap" model="ir.config_parameter">
+        <field name="key">hrm_hk.sp_lsp_monthly_wage_cap</field>
+        <field name="value">22500</field>
+    </record>
+    <record id="param_hk_lsp_max" model="ir.config_parameter">
+        <field name="key">hrm_hk.sp_lsp_maximum</field>
+        <field name="value">390000</field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hrm_hk_api_key_admin,hrm.hk.api.key admin,model_hrm_hk_api_key,group_hrm_hk_admin,1,1,1,1
+access_hrm_hk_webhook_admin,hrm.hk.webhook admin,model_hrm_hk_webhook,group_hrm_hk_admin,1,1,1,1
+access_hrm_hk_webhook_hr_user,hrm.hk.webhook hr read,model_hrm_hk_webhook,hr.group_hr_user,1,0,0,0
+access_hrm_hk_shift_hr_user,hrm.hk.shift hr user,model_hrm_hk_shift,hr.group_hr_user,1,1,1,1
+access_hrm_hk_shift_employee,hrm.hk.shift employee read,model_hrm_hk_shift,base.group_user,1,0,0,0
+access_hrm_hk_notification_hr_user,hrm.hk.notification hr user,model_hrm_hk_notification,hr.group_hr_user,1,1,1,1
+access_hrm_hk_notification_employee,hrm.hk.notification employee,model_hrm_hk_notification,base.group_user,1,1,0,0
+access_hrm_hk_push_hr_user,hrm.hk.push hr user,model_hrm_hk_push_subscription,hr.group_hr_user,1,1,1,1
+access_hrm_hk_notice_hr_user,hrm.hk.notice hr user,model_hrm_hk_notice,hr.group_hr_user,1,1,1,1
+access_hrm_hk_notice_employee,hrm.hk.notice employee read,model_hrm_hk_notice,base.group_user,1,0,0,0
+access_hrm_hk_lieu_hr_user,hrm.hk.holiday.lieu hr user,model_hrm_hk_holiday_lieu,hr.group_hr_user,1,1,1,1
+access_hrm_hk_lieu_employee,hrm.hk.holiday.lieu employee read,model_hrm_hk_holiday_lieu,base.group_user,1,0,0,0
+access_hrm_hk_ess_request_hr_user,hrm.hk.ess.request hr user,model_hrm_hk_ess_request,hr.group_hr_user,1,1,1,0
+access_hrm_hk_ess_request_employee,hrm.hk.ess.request employee read,model_hrm_hk_ess_request,base.group_user,1,0,0,0
+access_hrm_hk_ess_portlet_config_admin,hrm.hk.ess.portlet.config admin,model_hrm_hk_ess_portlet_config,group_hrm_hk_admin,1,1,1,1
+access_hrm_hk_ess_portlet_config_hr_user,hrm.hk.ess.portlet.config hr read,model_hrm_hk_ess_portlet_config,hr.group_hr_user,1,0,0,0

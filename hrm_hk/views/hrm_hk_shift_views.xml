@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hrm_hk_shift_calendar" model="ir.ui.view">
+        <field name="name">hrm.hk.shift.calendar</field>
+        <field name="model">hrm.hk.shift</field>
+        <field name="arch" type="xml">
+            <calendar string="Site Scheduling" date_start="start_datetime"
+                      date_stop="end_datetime" color="work_location_id" mode="week"
+                      event_open_popup="1" quick_create="0">
+                <field name="employee_id" filters="1"/>
+                <field name="work_location_id" filters="1"/>
+                <field name="state"/>
+                <field name="planned_hours"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_shift_gantt" model="ir.ui.view">
+        <field name="name">hrm.hk.shift.gantt</field>
+        <field name="model">hrm.hk.shift</field>
+        <field name="arch" type="xml">
+            <gantt date_start="start_datetime" date_stop="end_datetime"
+                   default_group_by="work_location_id" color="work_location_id"
+                   string="Site Roster">
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <field name="state"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_shift_list" model="ir.ui.view">
+        <field name="name">hrm.hk.shift.list</field>
+        <field name="model">hrm.hk.shift</field>
+        <field name="arch" type="xml">
+            <list string="Shifts" decoration-muted="state == 'draft'"
+                  decoration-success="state == 'confirmed'">
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="planned_hours" sum="Total Hours"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"
+                       decoration-info="state == 'published'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_shift_form" model="ir.ui.view">
+        <field name="name">hrm.hk.shift.form</field>
+        <field name="model">hrm.hk.shift</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_publish" type="object" string="Publish"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,published,confirmed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="work_location_id"/>
+                            <field name="shift_type_id"/>
+                            <field name="pay_multiplier" invisible="not shift_type_id"/>
+                        </group>
+                        <group>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="planned_hours"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Instructions for the worker…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_shift_search" model="ir.ui.view">
+        <field name="name">hrm.hk.shift.search</field>
+        <field name="model">hrm.hk.shift</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <filter name="published" string="Published" domain="[('state','=','published')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                <group>
+                    <filter name="grp_site" string="Site" context="{'group_by':'work_location_id'}"/>
+                    <filter name="grp_emp" string="Worker" context="{'group_by':'employee_id'}"/>
+                    <filter name="grp_state" string="Status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_shift" model="ir.actions.act_window">
+        <field name="name">Site Scheduling</field>
+        <field name="res_model">hrm.hk.shift</field>
+        <field name="view_mode">gantt,calendar,list,form</field>
+        <field name="search_view_id" ref="view_hrm_hk_shift_search"/>
+    </record>
+
+    <menuitem id="menu_hrm_hk_shift" name="Site Scheduling"
+              parent="hr.menu_hr_root" action="action_hrm_hk_shift"
+              groups="hr.group_hr_user" sequence="6"/>
+</odoo>

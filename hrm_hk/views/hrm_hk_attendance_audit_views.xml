@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hrm_hk_attendance_audit_list" model="ir.ui.view">
+        <field name="name">hr.attendance.audit.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Clock In / Out Audit" create="0" default_order="check_in desc">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours" sum="Total hours"/>
+                <field name="hk_site_id" optional="show"/>
+                <field name="in_latitude" optional="show" string="In lat"/>
+                <field name="in_longitude" optional="show" string="In lng"/>
+                <field name="hk_in_map" widget="url" text="📍 in" optional="show"/>
+                <field name="out_latitude" optional="hide" string="Out lat"/>
+                <field name="out_longitude" optional="hide" string="Out lng"/>
+                <field name="hk_out_map" widget="url" text="📍 out" optional="show"/>
+                <field name="in_ip_address" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_attendance_audit_form" model="ir.ui.view">
+        <field name="name">hr.attendance.audit.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group string="Attendance">
+                            <field name="employee_id"/>
+                            <field name="check_in"/>
+                            <field name="check_out"/>
+                            <field name="worked_hours"/>
+                            <field name="hk_site_id"/>
+                        </group>
+                        <group string="Location">
+                            <label for="in_latitude" string="Check-in GPS"/>
+                            <div>
+                                <field name="in_latitude" class="oe_inline"/>,
+                                <field name="in_longitude" class="oe_inline"/>
+                                <field name="hk_in_map" widget="url" text="Open map" class="oe_inline"/>
+                            </div>
+                            <label for="out_latitude" string="Check-out GPS"/>
+                            <div>
+                                <field name="out_latitude" class="oe_inline"/>,
+                                <field name="out_longitude" class="oe_inline"/>
+                                <field name="hk_out_map" widget="url" text="Open map" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_attendance_audit_search" model="ir.ui.view">
+        <field name="name">hr.attendance.audit.search</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="hk_site_id"/>
+                <filter name="today" string="Today"
+                        domain="[('check_in','>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="has_gps" string="Has GPS" domain="[('in_latitude','!=',0)]"/>
+                <filter name="via_qr" string="Via QR" domain="[('hk_site_id','!=',False)]"/>
+                <filter name="open" string="Still checked in" domain="[('check_out','=',False)]"/>
+                <group>
+                    <filter name="grp_emp" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="grp_site" string="Site" context="{'group_by':'hk_site_id'}"/>
+                    <filter name="grp_day" string="Day" context="{'group_by':'check_in:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_attendance_audit" model="ir.actions.act_window">
+        <field name="name">Clock In/Out Audit</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_hrm_hk_attendance_audit_search"/>
+        <field name="context">{'search_default_today': 1}</field>
+    </record>
+
+    <menuitem id="menu_hrm_hk_attendance_audit" name="Clock In/Out Audit"
+              parent="hr.menu_hr_root" action="action_hrm_hk_attendance_audit"
+              groups="hr.group_hr_user" sequence="9"/>
+</odoo>

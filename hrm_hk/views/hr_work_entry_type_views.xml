@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_work_entry_type_form_hrm_hk" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form.hrm.hk</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Hong Kong Shift" name="hk_shift">
+                    <group>
+                        <field name="hk_shift"/>
+                        <field name="hk_shift_start" widget="float_time"
+                               invisible="not hk_shift"/>
+                        <field name="hk_shift_end" widget="float_time"
+                               invisible="not hk_shift"/>
+                        <field name="hk_overnight" invisible="not hk_shift"/>
+                        <field name="hk_time_display" invisible="not hk_shift"/>
+                    </group>
+                    <group invisible="not hk_shift">
+                        <field name="hk_pay_mode"/>
+                        <field name="hk_pay_multiplier"
+                               invisible="hk_pay_mode != 'multiplier'"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="hk_hourly_amount"
+                               invisible="hk_pay_mode != 'hourly'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- ESS change-request portlet -> approver-group / attachment-requirement
+         mapping (EC Transactions Sample.xlsx -> Workflows sheet).
+
+         Group A may approve: Personal Info, Bank Account, Qualification, Experience.
+         Group B may approve only: Bank Account, Qualification, Experience (a strict
+         subset of Group A — it must NOT approve Personal Info).
+         Portlets the sheet leaves unassigned (Address, Dependent, Work Permit,
+         Education) default to Group A only, per the customer's stated fallback rule.
+
+         noupdate="1" so HR can correct this mapping from the UI (the sheet has
+         open questions) without a module upgrade overwriting the change. -->
+
+    <record id="ess_portlet_config_personal_info" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">10</field>
+        <field name="portlet_type">personal_info</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [ref('group_hrm_hk_ess_approver_a')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_bank_account" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">20</field>
+        <field name="portlet_type">bank_account</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [
+            ref('group_hrm_hk_ess_approver_a'), ref('group_hrm_hk_ess_approver_b')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_address" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">30</field>
+        <field name="portlet_type">address</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [ref('group_hrm_hk_ess_approver_a')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_dependent" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">40</field>
+        <field name="portlet_type">dependent</field>
+        <field name="attachment_required">False</field>
+        <field name="approver_group_ids" eval="[(6, 0, [ref('group_hrm_hk_ess_approver_a')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_work_permit" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">50</field>
+        <field name="portlet_type">work_permit</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [ref('group_hrm_hk_ess_approver_a')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_qualification" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">70</field>
+        <field name="portlet_type">qualification</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [
+            ref('group_hrm_hk_ess_approver_a'), ref('group_hrm_hk_ess_approver_b')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_experience" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">80</field>
+        <field name="portlet_type">experience</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [
+            ref('group_hrm_hk_ess_approver_a'), ref('group_hrm_hk_ess_approver_b')])]"/>
+    </record>
+
+    <record id="ess_portlet_config_education" model="hrm.hk.ess.portlet.config">
+        <field name="sequence">90</field>
+        <field name="portlet_type">education</field>
+        <field name="attachment_required">True</field>
+        <field name="approver_group_ids" eval="[(6, 0, [ref('group_hrm_hk_ess_approver_a')])]"/>
+    </record>
+</odoo>

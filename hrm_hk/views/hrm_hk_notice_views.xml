@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hrm_hk_notice_list" model="ir.ui.view">
+        <field name="name">hrm.hk.notice.list</field>
+        <field name="model">hrm.hk.notice</field>
+        <field name="arch" type="xml">
+            <list string="Notices">
+                <field name="pinned" widget="boolean_toggle"/>
+                <field name="publish_date"/>
+                <field name="name"/>
+                <field name="category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hrm_hk_notice_form" model="ir.ui.view">
+        <field name="name">hrm.hk.notice.form</field>
+        <field name="model">hrm.hk.notice</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="公告標題 / Notice title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="publish_date"/>
+                        </group>
+                        <group>
+                            <field name="pinned"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="body" placeholder="公告內容… / Notice content…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hrm_hk_notice" model="ir.actions.act_window">
+        <field name="name">Employee Notices</field>
+        <field name="res_model">hrm.hk.notice</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_pinned': 0}</field>
+    </record>
+
+    <menuitem id="menu_hrm_hk_notice" name="Employee Notices"
+              parent="hr.menu_hr_root" action="action_hrm_hk_notice"
+              groups="hr.group_hr_user" sequence="7"/>
+</odoo>

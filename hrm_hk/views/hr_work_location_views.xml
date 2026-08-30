@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_work_location_form_hrm_hk" model="ir.ui.view">
+        <field name="name">hr.work.location.form.hrm.hk</field>
+        <field name="model">hr.work.location</field>
+        <field name="inherit_id" ref="hr.hr_work_location_form_view"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group string="Site Clock-in (GPS &amp; QR)" name="hk_clockin">
+                    <group string="Expected location">
+                        <field name="hk_gmap_url" placeholder="Paste Google Maps link…" widget="url"/>
+                        <field name="hk_latitude"/>
+                        <field name="hk_longitude"/>
+                        <field name="hk_geofence_m"/>
+                    </group>
+                    <group string="Entrance QR monitor">
+                        <field name="hk_monitor_token" readonly="1"/>
+                        <div class="text-muted" colspan="2">
+                            Open the auto-renewing QR screen at the site entrance:<br/>
+                            <field name="hk_monitor_token" nolabel="1" invisible="1"/>
+                            <code>&lt;app&gt;/monitor/<field name="hk_monitor_token" nolabel="1" readonly="1" class="oe_inline"/></code>
+                        </div>
+                    </group>
+                </group>
+            </sheet>
+        </field>
+    </record>
+</odoo>

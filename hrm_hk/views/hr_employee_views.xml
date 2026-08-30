@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_hrm_hk" model="ir.ui.view">
+        <field name="name">hr.employee.form.hrm.hk</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="HK Compliance" name="hk_compliance"
+                      groups="hr.group_hr_user">
+                    <group>
+                        <group string="Identity &amp; Right to Work">
+                            <field name="hk_hkid" placeholder="A123456(7)"/>
+                            <field name="hk_visa_type"/>
+                            <field name="hk_visa_number"
+                                   invisible="hk_visa_type in (False, 'permanent')"/>
+                            <field name="hk_visa_expiry"
+                                   invisible="hk_visa_type in (False, 'permanent')"/>
+                            <field name="hk_visa_expiring_soon" readonly="1"
+                                   invisible="not hk_visa_expiring_soon"/>
+                        </group>
+                        <group string="Employment Ordinance">
+                            <field name="hk_continuous_start_date"/>
+                            <field name="hk_years_of_service" readonly="1"/>
+                            <field name="hk_is_continuous_contract" readonly="1"/>
+                            <field name="hk_statutory_notice_days"/>
+                            <field name="hk_eoy_payment"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

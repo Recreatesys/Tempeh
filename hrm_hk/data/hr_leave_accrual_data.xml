@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Sickness allowance accrues at 2 paid sick days/month in the first year,
+         then 4/month, capped at a maximum accrual of 120 days (EO s.33). -->
+    <record id="accrual_plan_hk_sickness" model="hr.leave.accrual.plan">
+        <field name="name">HK Sickness Allowance (2->4 / month, cap 120)</field>
+        <field name="time_off_type_id" ref="leave_type_hk_sickness"/>
+        <field name="level_ids" eval="[(0, 0, {
+                'start_count': 0, 'start_type': 'month',
+                'added_value': 2, 'added_value_type': 'day', 'frequency': 'monthly',
+                'cap_accrued_time': True, 'maximum_leave': 120,
+                'action_with_unused_accruals': 'all',
+            }), (0, 0, {
+                'start_count': 1, 'start_type': 'year',
+                'added_value': 4, 'added_value_type': 'day', 'frequency': 'monthly',
+                'cap_accrued_time': True, 'maximum_leave': 120,
+                'action_with_unused_accruals': 'all',
+            })]"/>
+    </record>
+
+    <!-- Annual leave follows the years-of-service scale (7 days yr1-2, then +1/yr
+         to 14 at yr9) via hr.contract.hk_statutory_annual_leave_days(). Grant it
+         through an allocation (manually or a yearly cron), not a flat accrual. -->
+</odoo>

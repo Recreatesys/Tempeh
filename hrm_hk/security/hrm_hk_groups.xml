@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_hrm_hk_admin" model="res.groups">
+        <field name="name">HRM HK: Integration Admin</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        <field name="comment">Can manage the employee web-app integration: API keys and outbound webhooks.</field>
+    </record>
+
+    <!-- ESS change-request approvers (EC Transactions Sample.xlsx -> Workflows
+         sheet). Group A is the broader approver set; Group B is a strict
+         subset of what it may approve — enforced by the approver_group_ids
+         on each hrm.hk.ess.portlet.config row, not by group hierarchy, since
+         Group B must NOT gain Group A's portlets via implied_ids.
+
+         These get their own module category (not
+         base.module_category_human_resources_employees, which core already
+         uses for Officer/Administrator) — in the Settings > Users form,
+         Odoo renders groups that share a category as a single-choice
+         selector when their implication order is total (res.groups.
+         get_groups_by_application()), so reusing the core category would
+         risk making "Administrator" and "ESS Approver Group A" mutually
+         exclusive on the same user, which they are not: an HR manager can
+         also be an ESS approver. -->
+    <record id="module_category_hrm_hk_ess_approval" model="ir.module.category">
+        <field name="name">ESS Approval</field>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="group_hrm_hk_ess_approver_a" model="res.groups">
+        <field name="name">HRM HK: ESS Approver (Group A)</field>
+        <field name="category_id" ref="module_category_hrm_hk_ess_approval"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="comment">May approve ESS change requests for portlets assigned to Group A
+            (per the customer's spec: Personal Info, Bank Account, Qualification, Experience —
+            plus any portlet left unassigned in the mapping, which defaults to Group A).</field>
+    </record>
+
+    <record id="group_hrm_hk_ess_approver_b" model="res.groups">
+        <field name="name">HRM HK: ESS Approver (Group B)</field>
+        <field name="category_id" ref="module_category_hrm_hk_ess_approval"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="comment">May approve ESS change requests for portlets assigned to Group B
+            (per the customer's spec: Bank Account, Qualification, Experience). Deliberately
+            NOT implied by or implying Group A — Group B must not approve Personal Info.</field>
+    </record>
+
+    <!-- Record rule: hrm.hk.ess.request carries financial PII (bank account
+         numbers) in proposed_values for the bank_account portlet. The ACL
+         below grants base.group_user (every internal user) read access so an
+         employee can see their own requests from the backend; this rule
+         narrows that to "own records only" for anyone who is not also HR.
+         hr.group_hr_user implies base.group_user, so HR / ESS approvers match
+         BOTH this rule and the permissive one below; Odoo ORs same-model
+         rules a user matches, so the permissive rule wins for them and they
+         keep seeing everything, same as before this rule was added. -->
+    <record id="hrm_hk_ess_request_rule_own" model="ir.rule">
+        <field name="name">ESS Change Request: non-HR users see only their own</field>
+        <field name="model_id" ref="model_hrm_hk_ess_request"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hrm_hk_ess_request_rule_hr" model="ir.rule">
+        <field name="name">ESS Change Request: HR sees all</field>
+        <field name="model_id" ref="model_hrm_hk_ess_request"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+</odoo>
