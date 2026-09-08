@@ -78,14 +78,15 @@ class ResPartner(models.Model):
         )
         running = opening
         lines = []
-        move_type_labels = dict(self.env['account.move']._fields['move_type']._description_selection(self.env))
+        short_type = {'out_invoice': 'Invoice', 'out_refund': 'Credit Note',
+                      'in_invoice': 'Vendor Bill', 'in_refund': 'Vendor Credit Note'}
         for aml in period_amls:
             running += aml.balance
             move = aml.move_id
             lines.append({
                 'date': aml.date,
                 'date_str': self._format_cn_date(aml.date),
-                'move_type': move_type_labels.get(move.move_type, '') if move else '',
+                'move_type': (short_type.get(move.move_type, '') if move else ''),
                 'activity': (move.name if move and move.name and move.name != '/' else aml.name) or '',
                 'reference': (move.ref or '') if move else '',
                 'due_date_str': self._format_cn_date(aml.date_maturity),

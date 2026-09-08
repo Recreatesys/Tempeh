@@ -32,9 +32,10 @@
                             <tr>
                                 <th class="text-start border-start border-end border-dark-subtle" scope="col">日期</th>
                                 <th class="text-start border-start border-end border-dark-subtle" scope="col">摘要</th>
+                                <th class="text-start border-start border-end border-dark-subtle" scope="col">到期繳付日</th>
                                 <th class="text-end border-start border-end border-dark-subtle" scope="col">金額</th>
                                 <th class="text-end border-start border-end border-dark-subtle" scope="col">
-                                    累計未付餘額 <t t-out="currency.symbol or currency.name"/>
+                                    累計未付餘額 <t t-out="currency.name"/>
                                 </th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@
                             <tr class="border-start border-end border-dark-subtle">
                                 <td class="border-start border-end border-dark-subtle align-middle"/>
                                 <td class="border-start border-end border-dark-subtle text-wrap">初期未付餘額</td>
+                                <td class="border-start border-end border-dark-subtle align-middle"/>
                                 <td class="text-end border-start border-end border-dark-subtle align-middle"/>
                                 <td class="text-end border-start border-end border-dark-subtle align-middle">
                                     <span t-out="stmt['opening']"
@@ -64,6 +66,9 @@
                                         <br/><small t-out="line['reference']" class="text-muted"/>
                                     </t>
                                 </td>
+                                <td class="border-start border-end border-dark-subtle align-middle">
+                                    <span t-out="line['due_date_str']"/>
+                                </td>
                                 <td class="text-end border-start border-end border-dark-subtle align-middle">
                                     <span t-out="line['amount']"
                                           t-options='{"widget": "monetary", "display_currency": currency}'/>
@@ -76,7 +81,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="border-top border-dark-subtle" colspan="4"/>
+                                <td class="border-top border-dark-subtle" colspan="5"/>
                             </tr>
                         </tfoot>
                     </table>
