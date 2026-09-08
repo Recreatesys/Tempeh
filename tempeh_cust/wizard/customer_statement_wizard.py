@@ -32,6 +32,9 @@ class CustomerStatementWizard(models.TransientModel):
         if self.start_date > self.end_date:
             raise UserError(_("Start Date must be on or before End Date."))
         data = {
+            # The web /report/download path renders with res_ids=None, so carry
+            # the partner ids in data too (the report parser reads them).
+            'partner_ids': self.partner_ids.ids,
             'start_date': fields.Date.to_string(self.start_date),
             'end_date': fields.Date.to_string(self.end_date),
         }
