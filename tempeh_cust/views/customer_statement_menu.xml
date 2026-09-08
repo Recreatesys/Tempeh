@@ -50,18 +50,49 @@ if records:
             <field name="model">res.partner</field>
             <field name="priority">99</field>
             <field name="arch" type="xml">
-                <form string="催款報表" create="0" edit="0">
+                <form string="催款報表" create="0">
                     <header>
+                        <button name="action_manually_process_automatic_followups" type="object"
+                                string="跟進 Follow-up" class="btn-primary"/>
+                        <button name="action_open_unreconciled_partner" type="object"
+                                string="對賬 Reconcile"/>
                         <button name="action_print_customer_statement" type="object"
-                                string="列印月結單 Print Statement" class="btn-primary"/>
+                                string="列印月結單 Print Statement"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_partner_form" type="object"
+                                    class="oe_stat_button" icon="fa-address-card">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">客戶</span>
+                                    <span class="o_stat_text">Customer</span>
+                                </div>
+                            </button>
+                            <button name="action_view_unpaid_invoices" type="object"
+                                    class="oe_stat_button" icon="fa-file-text-o">
+                                <field name="unpaid_invoices_count" widget="statinfo"
+                                       string="發票 Invoices"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="followup_line_id" readonly="1"
+                                       string="催款等級" placeholder="催款等級 Follow-up Level"/></h3>
                         </div>
                         <group>
                             <group>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="ref" string="參考" readonly="1"/>
+                                <field name="followup_status" string="跟進狀態" widget="badge" readonly="1"
+                                       decoration-danger="followup_status == 'in_need_of_action'"
+                                       decoration-warning="followup_status == 'with_overdue_invoices'"
+                                       decoration-success="followup_status == 'no_action_needed'"/>
+                                <field name="followup_reminder_type" string="提醒" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="followup_next_action_date" string="下次跟進日" readonly="1"/>
+                                <field name="followup_responsible_id" string="負責人" readonly="1"
+                                       widget="many2one_avatar_user"/>
                                 <field name="credit" string="總欠款 Total Receivable"
                                        widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_overdue" string="逾期總額"
@@ -69,12 +100,17 @@ if records:
                             </group>
                         </group>
                         <separator string="未付發票 Outstanding Invoices"/>
-                        <field name="statement_move_line_ids" readonly="1">
-                            <list create="0" edit="0" delete="0">
+                        <field name="statement_move_line_ids">
+                            <list create="0" delete="0" editable="bottom">
                                 <field name="company_currency_id" column_invisible="1"/>
-                                <field name="date" string="日期"/>
-                                <field name="move_id" string="編號"/>
-                                <field name="date_maturity" string="到期繳付日"/>
+                                <field name="date" string="日期" readonly="1"/>
+                                <field name="move_id" string="編號" readonly="1"/>
+                                <field name="invoice_origin" string="原始" readonly="1" optional="show"/>
+                                <field name="date_maturity" string="到期繳付日" readonly="1"/>
+                                <field name="statement_delivery_date" string="預計交貨日期"
+                                       readonly="1" optional="show"/>
+                                <field name="statement_excluded" string="不納入後續行動"
+                                       widget="boolean_toggle"/>
                                 <field name="amount_residual" string="殘值金額"
                                        widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
                             </list>

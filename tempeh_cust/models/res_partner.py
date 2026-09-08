@@ -29,8 +29,10 @@ class ResPartner(models.Model):
         }
 
     # Outstanding customer invoices shown on the 催款報表 per-customer form.
+    # Writable (inverse) so the 不納入後續行動 toggle can be saved inline.
     statement_move_line_ids = fields.One2many(
         'account.move.line', compute='_compute_statement_move_line_ids',
+        inverse='_inverse_statement_move_line_ids', readonly=False,
         string='Outstanding Invoices')
 
     def _compute_statement_move_line_ids(self):
@@ -43,10 +45,31 @@ class ResPartner(models.Model):
                 ('amount_residual', '!=', 0),
             ], order='date_maturity, date')
 
+    def _inverse_statement_move_line_ids(self):
+        """Persist inline edits made on the 催款報表 form (the 不納入後續行動
+        toggle). The ORM applies the x2many child writes when the field value is
+        set; nothing further is required here — the recordset itself is derived
+        by search and must not be rewritten."""
+        return
+
     def action_print_customer_statement(self):
         """Per-customer 'Print Statement' button on the 催款報表 form."""
         self.ensure_one()
         return self.open_customer_statement()
+
+    def action_open_partner_form(self):
+        """客戶 smart button — open the standard contact form for this customer
+        (an explicit view so we do not recurse into the 催款報表 form)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.name,
+            'res_model': 'res.partner',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'views': [(self.env.ref('base.view_partner_form').id, 'form')],
+            'target': 'current',
+        }
 
     def _get_statement_report_name(self):
         """Filename for the printed customer statement (催款報表 / 客戶月結單)."""
@@ -126,3 +149,16 @@ class ResPartner(models.Model):
             'lines': lines,
             'closing': running,
         }
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    # Columns surfaced on the 催款報表 per-customer form so it mirrors the native
+    # follow-up detail. `invoice_origin` (原始) is already provided by
+    # account_followup; these add 預計交貨日期 and the 不納入後續行動 toggle.
+    statement_delivery_date = fields.Date(
+        related='move_id.delivery_date', string='預計交貨日期', readonly=True)
+    statement_excluded = fields.Boolean(
+        string='不納入後續行動', default=False,
+        help="剔選後此發票標示為不納入催款後續行動。")
