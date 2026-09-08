@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Action on contacts / Follow-up customer list:
-             select customers -> Action -> Print Customer Statements -->
+        <!-- Action on contacts / the 催款報表 list: select customers ->
+             Action -> Print Customer Statements (handles multiple at once). -->
         <record id="action_open_customer_statement_wizard_server" model="ir.actions.server">
             <field name="name">Print Customer Statements</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -22,19 +22,43 @@ if records:
             </field>
         </record>
 
-        <!-- Expose the native Follow-up Reports (催款報表) screen in Accounting → Customers.
-             Use the working account_report client action (the followup module's own
-             action_account_followup uses the unregistered 'account_report_followup' tag). -->
-        <record id="action_followup_report_tempeh" model="ir.actions.client">
-            <field name="name">Follow-up Reports</field>
-            <field name="tag">account_report</field>
-            <field name="context" eval="{'report_id': ref('account_reports.followup_report')}"/>
+        <!-- 催款報表: list of customers with outstanding AR. Tick several and use
+             Action -> Print Customer Statements to print statements together. -->
+        <record id="view_followup_customers_list" model="ir.ui.view">
+            <field name="name">followup.customers.list</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list string="催款報表" create="0" import="0">
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="name"/>
+                    <field name="ref" optional="show"/>
+                    <field name="followup_status" widget="badge"
+                           decoration-danger="followup_status == 'in_need_of_action'"
+                           decoration-warning="followup_status == 'with_overdue_invoices'"
+                           decoration-info="followup_status == 'no_action_needed'"/>
+                    <field name="followup_responsible_id" optional="hide" widget="many2one_avatar_user"/>
+                    <field name="total_due" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="total_overdue" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_followup_customers_list" model="ir.actions.act_window">
+            <field name="name">催款報表</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_followup_customers_list"/>
+            <field name="domain">[('total_due', '>', 0)]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No customers with outstanding receivables.</p>
+            </field>
         </record>
 
         <menuitem id="menu_account_followup_report"
-                  name="Follow-up Reports"
+                  name="催款報表"
                   parent="account.menu_finance_receivables"
-                  action="action_followup_report_tempeh"
+                  action="action_followup_customers_list"
                   groups="account.group_account_invoice"
                   sequence="11"/>
     </data>
