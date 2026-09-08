@@ -43,11 +43,54 @@ if records:
             </field>
         </record>
 
+        <!-- Per-customer 催款報表 form: lists the customer's outstanding invoices
+             (like the native follow-up detail) with a Print Statement button. -->
+        <record id="view_followup_customer_form" model="ir.ui.view">
+            <field name="name">followup.customer.statement.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form string="催款報表" create="0" edit="0">
+                    <header>
+                        <button name="action_print_customer_statement" type="object"
+                                string="列印月結單 Print Statement" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="credit" string="總欠款 Total Receivable"
+                                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_overdue" string="逾期總額"
+                                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
+                        <separator string="未付發票 Outstanding Invoices"/>
+                        <field name="statement_move_line_ids" readonly="1">
+                            <list create="0" edit="0" delete="0">
+                                <field name="company_currency_id" column_invisible="1"/>
+                                <field name="date" string="日期"/>
+                                <field name="move_id" string="編號"/>
+                                <field name="date_maturity" string="到期繳付日"/>
+                                <field name="amount_residual" string="殘值金額"
+                                       widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="action_followup_customers_list" model="ir.actions.act_window">
             <field name="name">催款報表</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">list,form</field>
-            <field name="view_id" ref="view_followup_customers_list"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('view_followup_customers_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_followup_customer_form')})]"/>
             <field name="domain">[('credit', '>', 0)]</field>
             <field name="context">{}</field>
             <field name="help" type="html">

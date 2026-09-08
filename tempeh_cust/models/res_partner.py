@@ -28,6 +28,26 @@ class ResPartner(models.Model):
             'context': {'default_partner_ids': [(6, 0, self.ids)]},
         }
 
+    # Outstanding customer invoices shown on the 催款報表 per-customer form.
+    statement_move_line_ids = fields.One2many(
+        'account.move.line', compute='_compute_statement_move_line_ids',
+        string='Outstanding Invoices')
+
+    def _compute_statement_move_line_ids(self):
+        AML = self.env['account.move.line']
+        for p in self:
+            p.statement_move_line_ids = AML.search([
+                ('partner_id', '=', p.id),
+                ('parent_state', '=', 'posted'),
+                ('account_id.account_type', '=', 'asset_receivable'),
+                ('amount_residual', '!=', 0),
+            ], order='date_maturity, date')
+
+    def action_print_customer_statement(self):
+        """Per-customer 'Print Statement' button on the 催款報表 form."""
+        self.ensure_one()
+        return self.open_customer_statement()
+
     def _get_statement_report_name(self):
         """Filename for the printed customer statement (催款報表 / 客戶月結單)."""
         if len(self) == 1:
